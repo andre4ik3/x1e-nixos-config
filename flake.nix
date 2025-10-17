@@ -174,7 +174,7 @@
         packages = {
           # Convenience aliases
           iso = self.packages.${buildSystem}.lenovo-yoga-slim7x-iso;
-          kernel = pkgs-cross.x1e80100-linux.kernel;
+          kernel = pkgs-cross.linuxPackages_x1e.kernel;
           inherit (pkgs-cross) slbounce;
         }
         // lib.mapAttrs' (

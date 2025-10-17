@@ -97,7 +97,7 @@ in
 
       # For now the kernel is same for all of the supported devices, hopefully
       # we can keep it this way so compile times stay manageable.
-      boot.kernelPackages = pkgs.x1e80100-linux;
+      boot.kernelPackages = pkgs.linuxPackages_x1e;
 
       boot.initrd.extraFirmwarePaths = lib.mkMerge [
         (lib.mkIf cfg.lenovo-thinkpad-t14s.enable [
