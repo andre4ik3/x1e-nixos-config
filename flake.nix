@@ -34,7 +34,7 @@
           {
             # TODO: expose these modules on their own?
             imports = [
-              ./modules/x1e80100.nix
+              ./modules/x1e.nix
               ./modules/el2.nix
             ];
             config = {
