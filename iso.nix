@@ -5,6 +5,10 @@
   ...
 }:
 
+let
+  isCross = pkgs.stdenv.buildPlatform != pkgs.stdenv.hostPlatform;
+in
+
 {
   image.baseName =
     let
@@ -30,6 +34,13 @@
       path = ./.;
     };
   };
+
+  # Required to evaluate packages from `pkgs-cross` on the device.
+  isoImage.storeContents = lib.optional isCross [ pkgs.path ];
+
+  system.systemBuilderCommands = lib.optionalString isCross ''
+    echo -n "${pkgs.stdenv.buildPlatform.system}" > $out/build-system
+  '';
 
   # Include this repo in the image
   systemd.tmpfiles.rules = [ "L /x1e-nixos-config - - - - ${./.}" ];

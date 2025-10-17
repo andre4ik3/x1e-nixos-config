@@ -123,23 +123,11 @@
             modules = [
               "${nixpkgs-patched}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
               ./iso.nix
-              ./modules/x1e80100.nix
-              ./modules/common.nix
+              self.nixosModules.default
               {
                 nixpkgs.pkgs = pkgs-cross;
                 hardware.${device}.enable = true;
               }
-              (
-                { lib, pkgs, ... }:
-                lib.mkIf (pkgs.stdenv.buildPlatform != pkgs.stdenv.hostPlatform) {
-                  # Required to evaluate packages from `pkgs-cross` on the device.
-                  isoImage.storeContents = [ nixpkgs-patched ];
-
-                  system.systemBuilderCommands = ''
-                    echo -n "${pkgs.stdenv.buildPlatform.system}" > $out/build-system
-                  '';
-                }
-              )
             ];
           };
 
@@ -148,8 +136,7 @@
           lib.nixosSystem {
             modules = [
               ./examples/flake-based-config/configuration.nix
-              self.nixosModules.x1e
-              ./modules/common.nix
+              self.nixosModules.default
               {
                 nixpkgs.pkgs = pkgs-cross;
                 hardware.${device}.enable = true;
