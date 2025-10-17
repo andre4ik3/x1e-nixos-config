@@ -1,7 +1,9 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
+    flake-compat.url = "github:nix-community/flake-compat";
   };
+
   outputs =
     {
       self,
@@ -16,11 +18,22 @@
           ) nixpkgs.lib.systems.flakeExposed
         );
     in
-    # default.nix has `nixosModules` which is build system agnostic
-    (import ./default.nix)
+    {
+      nixosModules.x1e =
+        { lib, pkgs, ... }:
+        {
+          imports = [
+            ./modules/x1e80100.nix
+            ./modules/el2.nix
+          ];
+          config = {
+            nixpkgs.overlays = [
+              (import ./packages/overlay.nix)
+            ];
+          };
+        };
 
-    # Set nixosConfigurations to the non-cross systems.
-    // {
+      # Set nixosConfigurations to the non-cross systems.
       nixosConfigurations = self.nixosConfigurationsForBuildSystem.aarch64-linux;
     }
 

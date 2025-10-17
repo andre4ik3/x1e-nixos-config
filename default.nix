@@ -1,15 +1,16 @@
-{
-  nixosModules.x1e =
-    { lib, pkgs, ... }:
-    {
-      imports = [
-        ./modules/x1e80100.nix
-        ./modules/el2.nix
-      ];
-      config = {
-        nixpkgs.overlays = [
-          (import ./packages/overlay.nix)
-        ];
-      };
-    };
-}
+# This file provides backward compatibility to nix < 2.4 clients
+{ system ? builtins.currentSystem }:
+let
+  lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+
+  root = lock.nodes.${lock.root};
+  inherit (lock.nodes.${root.inputs.flake-compat}.locked) owner repo rev narHash;
+
+  flake-compat = fetchTarball {
+    url = "https://github.com/${owner}/${repo}/archive/${rev}.tar.gz";
+    sha256 = narHash;
+  };
+
+  flake = import flake-compat { inherit system; src = ./.; };
+in
+flake.defaultNix
