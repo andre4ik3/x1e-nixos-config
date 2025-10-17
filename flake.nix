@@ -162,7 +162,7 @@
           # Convenience aliases
           iso = self.packages.${buildSystem}.lenovo-yoga-slim7x-iso;
           kernel = pkgs-cross.linuxPackages_x1e.kernel;
-          inherit (pkgs-cross) slbounce;
+          inherit (pkgs-cross) denali-firmware slbounce;
         }
         // lib.mapAttrs' (
           device: _: lib.nameValuePair "${device}-iso" (deviceISO device).config.system.build.isoImage
